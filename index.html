@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bongo Dating - Watch Reels</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
+    body {
+      background: #fff; color: #333; display: flex; flex-direction: column;
+      align-items: center; min-height: 100vh;
+    }
+    header {
+      width: 100%; background: linear-gradient(135deg, #ff416c, #ff4b2b);
+      color: #fff; padding: 18px; text-align: center;
+      font-size: 1.6em; font-weight: 700;
+      border-bottom-left-radius: 25px; border-bottom-right-radius: 25px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.25); letter-spacing: 0.6px;
+      text-transform: uppercase;
+    }
+    .reels-container {
+      display: grid; grid-template-columns: repeat(2, 1fr);
+      gap: 14px; padding: 15px; padding-bottom: 100px;
+      width: 100%; max-width: 950px;
+    }
+    .reel {
+      position: relative; border-radius: 15px; overflow: hidden; background: #000;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.25); cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .reel:hover { transform: scale(1.03); box-shadow: 0 6px 16px rgba(0,0,0,0.3); }
+    .thumbnail {
+      width: 100%; height: 230px; object-fit: cover; display: block;
+      filter: brightness(85%); border-radius: 15px; transition: filter 0.3s ease;
+    }
+    .reel:hover .thumbnail { filter: brightness(100%); }
+    .play-icon {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      font-size: 2.5em; color: #fff; opacity: 0.85; pointer-events: none;
+    }
+    .label {
+      position: absolute; top: 10px; left: 10px;
+      background: rgba(255,75,43,0.9); color: #fff;
+      padding: 4px 8px; border-radius: 8px;
+      font-size: 0.7em; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .free { background: rgba(0,200,83,0.9); }
+
+    .modal {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.95); display: flex; align-items: center; justify-content: center;
+      visibility: hidden; opacity: 0; transition: opacity 0.4s ease; z-index: 1000;
+    }
+    .modal.active { visibility: visible; opacity: 1; }
+    .modal iframe { width: 100%; height: 100%; border: none; object-fit: cover; }
+    .close-btn {
+      position: absolute; top: 20px; left: 20px; font-size: 2em; color: #fff;
+      cursor: pointer; z-index: 1100; background: rgba(0,0,0,0.4);
+      border-radius: 50%; padding: 8px 12px;
+    }
+    .password-box {
+      position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      background: #fff; padding: 25px; border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3); text-align: center;
+      width: 85%; max-width: 360px; z-index: 2000; display: none;
+    }
+    .password-box h3 { color: #ff4b2b; margin-bottom: 10px; }
+    .password-box p { font-size: 0.9em; color: #444; margin-bottom: 10px; }
+    .password-box input {
+      width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ccc;
+      margin: 10px 0; text-align: center;
+    }
+    .password-box button {
+      background: #ff4b2b; color: #fff; border: none; padding: 10px 18px;
+      border-radius: 8px; cursor: pointer; font-weight: 600; margin: 4px;
+    }
+    .password-box button:hover { background: #ff6a4b; }
+    .error { color: red; font-size: 0.85em; }
+    @media (max-width: 600px) {
+      .reels-container { grid-template-columns: 1fr 1fr; }
+      .thumbnail { height: 200px; }
+    }
+  </style>
+</head>
+<body>
+  <header>🎬 BONGO Dating</header>
+
+  <div class="reels-container" id="reelsContainer"></div>
+
+  <div class="modal" id="videoModal">
+    <div class="close-btn" id="closeModal"><i class="fa-solid fa-times"></i></div>
+    <iframe id="videoFrame" src="" allowfullscreen></iframe>
+  </div>
+
+  <div class="password-box" id="passwordBox">
+    <h3>🔒 Premium Content</h3>
+    <p>
+      Karibu <b>Bongo Dating</b> 💖<br>
+      Ili kutazama video zote, lipa gharama ya mwezi mzima <b>TSH 1,500</b>.
+    </p>
+    <p>
+      <b>Vodacom: <span id="num">0746953199</span></b><br>
+      Jina: <b>Mazonzi Mwanguzyo</b>
+    </p>
+    <p style="font-size:0.9em; color:#444; margin-top:6px;">
+      <strong>Punde baada ya malipo:</strong> utapokea PASWORD ya kutazama videos zote kwenye namba uliotumia kulipia kifurushi chako.
+    </p>
+    <button id="copyBtn">Kopi Namba</button>
+    <br><br>
+    <input type="password" id="passwordInput" placeholder="Weka Password hapa...">
+    <div class="error" id="errorMsg"></div>
+    <div>
+      <button id="submitPassword">Tazama Video</button>
+      <button id="closeBox">Funga</button>
+    </div>
+  </div>
+
+  <script>
+    const PASSWORD = "Saka255"; // password sahihi ya premium content
+
+    const videos = [
+      { img: "https://i.postimg.cc/qR0L3Kqk/1761115156932.jpg", link: "https://streamable.com/9qb4v9" },
+      { img: "https://i.postimg.cc/8Pk37jn6/1761312623169.jpg", link: "https://streamable.com/xyz002" },
+      { img: "https://i.postimg.cc/4yx5xh4D/1761312553486.jpg", link: "https://streamable.com/xyz003" },
+      { img: "https://i.postimg.cc/76fLXsf3/1761120390923.jpg", link: "https://streamable.com/ficyip" },
+      { img: "https://i.postimg.cc/mhxt60nJ/1761312202822.jpg", link: "https://streamable.com/xyz005" },
+      { img: "https://i.postimg.cc/d0XkykBP/1761312562793.jpg", link: "https://streamable.com/xyz006" },
+      { img: "https://i.postimg.cc/BbZ0ZNKb/1761312186000.jpg", link: "https://streamable.com/xyz007" },
+      { img: "https://i.postimg.cc/s2CbDwFM/1761312182417.jpg", link: "https://streamable.com/xyz008" },
+      { img: "https://i.postimg.cc/tgDDQ5pd/IMG-20251024-154051-699.jpg", link: "https://streamable.com/xyz009" },
+      { img: "https://i.postimg.cc/Vk7Q4XpR/wet-hot-and-sticky-ebony-slut-fucks-a-stranger-enjoy.png", link: "https://streamable.com/xyz010" },
+      { img: "https://i.postimg.cc/qvFDzw9R/black-tanzania-and-fucked-and.png", link: "https://streamable.com/xyz011" },
+      { img: "https://i.postimg.cc/Tw69D4Q5/zulu-girl-twerking-on-cock.png", link: "https://streamable.com/xyz012" },
+      { img: "https://i.postimg.cc/BZwFWzD3/a9e8a6fa4974adf2729755273ea12e25-21.png", link: "https://streamable.com/xyz013" },
+      { img: "https://i.postimg.cc/qRxGXxZB/best-interracial-orgy-scene-hot-vintage-babes.png", link: "https://streamable.com/xyz014" },
+      { img: "https://i.postimg.cc/vBtvLtSH/kuma-tamu.png", link: "https://streamable.com/xyz015" },
+      { img: "https://i.postimg.cc/MZbWVfZJ/luna-corazon-wife-pays-the-bills.png", link: "https://streamable.com/xyz016" },
+      { img: "https://i.postimg.cc/PqGcSKKb/mdx-pt2-wet-pussy-fucking-with-my-co-worker.png", link: "https://streamable.com/xyz017" },
+      { img: "https://i.postimg.cc/5NCSsJGQ/vlcsnap-error234.png", link: "https://streamable.com/xyz018" },
+      { img: "https://i.postimg.cc/JzT3nhHb/vlcsnap-error787.png", link: "https://streamable.com/xyz019" },
+      { img: "https://i.postimg.cc/cHSmnbT8/samone-taylor-great-cocksucker.png", link: "https://streamable.com/xyz020" },
+      { img: "https://i.postimg.cc/mZXTmf93/vlcsnap-error781.png", link: "https://streamable.com/xyz021" },
+      { img: "https://i.postimg.cc/DyvByHY2/semmie-horny-ebony-milf-4.png", link: "https://streamable.com/xyz022" },
+      { img: "https://i.postimg.cc/DfM88bxv/TZ-Telegram-XXX-Video.png", link: "https://streamable.com/xyz023" },
+      { img: "https://i.postimg.cc/T1M2JnFp/Wanachuo-wanapenda-kutombana-kila-wakati.png", link: "https://streamable.com/xyz024" },
+      { img: "https://i.postimg.cc/d0ZKNL8y/vlcsnap-error010.png", link: "https://streamable.com/xyz025" },
+      { img: "https://i.postimg.cc/8CdSMsMq/63efd37ac79154-42374907-mp4-5.png", link: "https://streamable.com/xyz026" },
+      { img: "https://i.postimg.cc/GtVNZ1vH/8.png", link: "https://streamable.com/xyz027" },
+      { img: "https://i.postimg.cc/qvT0R8C8/79471c2bc07114c1dcb5a03641f44215-3.png", link: "https://streamable.com/xyz028" },
+      { img: "https://i.postimg.cc/brncYJy9/d8a5d36cef1858b48ff285e2826a2474-1.png", link: "https://streamable.com/xyz029" },
+      { img: "https://i.postimg.cc/8Pk37jn6/1761312623169.jpg", link: "https://streamable.com/xyz002" },
+      { img: "https://i.postimg.cc/4yx5xh4D/1761312553486.jpg", link: "https://streamable.com/xyz003" },
+      { img: "https://i.postimg.cc/76fLXsf3/1761120390923.jpg", link: "https://streamable.com/ficyip" },
+      { img: "https://i.postimg.cc/mhxt60nJ/1761312202822.jpg", link: "https://streamable.com/xyz005" },
+      { img: "https://i.postimg.cc/d0XkykBP/1761312562793.jpg", link: "https://streamable.com/xyz006" },
+      { img: "https://i.postimg.cc/BbZ0ZNKb/1761312186000.jpg", link: "https://streamable.com/xyz007" },
+      { img: "https://i.postimg.cc/s2CbDwFM/1761312182417.jpg", link: "https://streamable.com/xyz008" },
+      { img: "https://i.postimg.cc/tgDDQ5pd/IMG-20251024-154051-699.jpg", link: "https://streamable.com/xyz009" },
+      { img: "https://i.postimg.cc/Vk7Q4XpR/wet-hot-and-sticky-ebony-slut-fucks-a-stranger-enjoy.png", link: "https://streamable.com/xyz010" },
+      { img: "https://i.postimg.cc/qvFDzw9R/black-tanzania-and-fucked-and.png", link: "https://streamable.com/xyz011" },
+      { img: "https://i.postimg.cc/Tw69D4Q5/zulu-girl-twerking-on-cock.png", link: "https://streamable.com/xyz012" },
+      { img: "https://i.postimg.cc/BZwFWzD3/a9e8a6fa4974adf2729755273ea12e25-21.png", link: "https://streamable.com/xyz013" },
+      { img: "https://i.postimg.cc/qRxGXxZB/best-interracial-orgy-scene-hot-vintage-babes.png", link: "https://streamable.com/xyz014" },
+      { img: "https://i.postimg.cc/vBtvLtSH/kuma-tamu.png", link: "https://streamable.com/xyz015" },
+      { img: "https://i.postimg.cc/MZbWVfZJ/luna-corazon-wife-pays-the-bills.png", link: "https://streamable.com/xyz016" },
+      { img: "https://i.postimg.cc/PqGcSKKb/mdx-pt2-wet-pussy-fucking-with-my-co-worker.png", link: "https://streamable.com/xyz017" },
+      { img: "https://i.postimg.cc/5NCSsJGQ/vlcsnap-error234.png", link: "https://streamable.com/xyz018" },
+      { img: "https://i.postimg.cc/JzT3nhHb/vlcsnap-error787.png", link: "https://streamable.com/xyz019" },
+      { img: "https://i.postimg.cc/cHSmnbT8/samone-taylor-great-cocksucker.png", link: "https://streamable.com/xyz020" },
+      { img: "https://i.postimg.cc/mZXTmf93/vlcsnap-error781.png", link: "https://streamable.com/xyz021" },
+      { img: "https://i.postimg.cc/DyvByHY2/semmie-horny-ebony-milf-4.png", link: "https://streamable.com/xyz022" },
+      { img: "https://i.postimg.cc/DfM88bxv/TZ-Telegram-XXX-Video.png", link: "https://streamable.com/xyz023" },
+      { img: "https://i.postimg.cc/T1M2JnFp/Wanachuo-wanapenda-kutombana-kila-wakati.png", link: "https://streamable.com/xyz024" },
+      { img: "https://i.postimg.cc/d0ZKNL8y/vlcsnap-error010.png", link: "https://streamable.com/xyz025" },
+      { img: "https://i.postimg.cc/8CdSMsMq/63efd37ac79154-42374907-mp4-5.png", link: "https://streamable.com/xyz026" },
+      { img: "https://i.postimg.cc/GtVNZ1vH/8.png", link: "https://streamable.com/xyz027" },
+      { img: "https://i.postimg.cc/qvT0R8C8/79471c2bc07114c1dcb5a03641f44215-3.png", link: "https://streamable.com/xyz028" },
+      { img: "https://i.postimg.cc/brncYJy9/d8a5d36cef1858b48ff285e2826a2474-1.png", link: "https://streamable.com/xyz029" },
+      { img: "https://i.postimg.cc/WzgCLHSV/thumb1-1.png", link: "https://streamable.com/xyz030" }
+    ];
+
+    const freeVideos = [0, 3];
+    const reelsContainer = document.getElementById("reelsContainer");
+
+    reelsContainer.innerHTML = videos.map((v, i) => `
+      <div class='reel' data-index='${i}' data-link='${v.link}'>
+        <img src='${v.img}' class='thumbnail'>
+        <div class='play-icon'><i class='fa-solid fa-play'></i></div>
+        <div class='label ${freeVideos.includes(i) ? "free" : ""}'>
+          ${freeVideos.includes(i) ? "Free Video" : "Premium Video"}
+        </div>
+      </div>
+    `).join('');
+
+    const modal = document.getElementById('videoModal');
+    const videoFrame = document.getElementById('videoFrame');
+    const closeBtn = document.getElementById('closeModal');
+    const passwordBox = document.getElementById('passwordBox');
+    const passwordInput = document.getElementById('passwordInput');
+    const errorMsg = document.getElementById('errorMsg');
+    const submitPassword = document.getElementById('submitPassword');
+    const closeBox = document.getElementById('closeBox');
+    const copyBtn = document.getElementById('copyBtn');
+    let selectedLink = "";
+
+    document.addEventListener('click', e => {
+      const reel = e.target.closest('.reel');
+      if (reel) {
+        const index = parseInt(reel.getAttribute('data-index'));
+        const link = reel.getAttribute('data-link');
+        if (freeVideos.includes(index)) {
+          videoFrame.src = link;
+          modal.classList.add('active');
+        } else {
+          selectedLink = link;
+          passwordBox.style.display = 'block';
+        }
+      }
+    });
+
+    closeBtn.addEventListener('click', () => {
+      modal.classList.remove('active');
+      videoFrame.src = '';
+    });
+    closeBox.addEventListener('click', () => {
+      passwordBox.style.display = 'none';
+      errorMsg.textContent = '';
+      passwordInput.value = '';
+    });
+    copyBtn.addEventListener('click', () => {
+      navigator.clipboard.writeText("0746953199");
+      alert("✅ Namba ya Mpesa imekopiwa!");
+    });
+    submitPassword.addEventListener('click', () => {
+      const pass = passwordInput.value.trim();
+      if (pass === PASSWORD) {
+        passwordBox.style.display = 'none';
+        videoFrame.src = selectedLink;
+        modal.classList.add('active');
+      } else {
+        errorMsg.textContent = "⚠️ Password si sahihi, tafadhali jaribu tena!";
+      }
+    });
+  </script>
+
+  <!-- WhatsApp Floating Button -->
+  <a href="https://wa.me/255746953199?text=Nahitaji%20Kulipia%20Bongo%20Dating" class="wa-btn" target="_blank">
+    <i class="fab fa-whatsapp"></i>
+  </a>
+
+  <style>
+    .wa-btn {
+      position: fixed; bottom: 20px; right: 20px;
+      background: #25d366; color: #fff; font-size: 28px;
+      width: 55px; height: 55px; border-radius: 50%;
+      text-align: center; box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+      z-index: 999; transition: transform 0.2s ease;
+    }
+    .wa-btn i { margin-top: 13px; }
+    .wa-btn:hover { transform: scale(1.1); background: #1ebe5d; }
+  </style>
+</body>
+</html>
