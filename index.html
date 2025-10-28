@@ -7,11 +7,11 @@
 <link rel="icon" href="https://i.ibb.co/93yWms0Z/1761516485754.jpg">
 <style>
 :root {
-  --bg:#0d0e10;
-  --card:#16171a;
-  --muted:#9aa0a6;
-  --accent:#1a73e8;
-  --accent2:#2a9df4;
+  --bg:#0b1531;        /* dark blue background */
+  --card:#102249;      /* deep blue for cards */
+  --muted:#9bb3d1;     /* light blue-grey for text */
+  --accent:#1a73e8;    /* primary blue */
+  --accent2:#2a9df4;   /* lighter blue gradient */
 }
 body {
   margin:0;
@@ -41,11 +41,11 @@ body {
   display:flex;
   flex-direction:column;
 }
-.meta h1 {margin:0;font-size:22px;font-weight:600;}
+.meta h1 {margin:0;font-size:22px;font-weight:600;color:#ffffff;}
 .dev {color:var(--muted);font-size:13px;margin-top:4px;}
 .badges {display:flex;gap:10px;margin-top:10px;flex-wrap:wrap;}
 .badge {
-  background:rgba(255,255,255,0.05);
+  background:rgba(255,255,255,0.08);
   padding:6px 10px;
   border-radius:999px;
   font-size:13px;
@@ -92,7 +92,7 @@ body {
 .ss {
   flex:0 0 140px;
   height:280px;
-  background:#111 center/cover no-repeat;
+  background:#132d5c center/cover no-repeat;
   border-radius:12px;
   border:1px solid rgba(255,255,255,0.06);
   transition:transform .3s;
@@ -101,12 +101,12 @@ body {
 
 /* Sections */
 .section {
-  background:rgba(255,255,255,0.03);
+  background:rgba(255,255,255,0.05);
   padding:16px;
   border-radius:14px;
   margin-top:18px;
 }
-.section h3 {margin:0 0 8px;}
+.section h3 {margin:0 0 8px;color:#ffffff;}
 .pill {
   border:1px solid rgba(255,255,255,0.08);
   border-radius:999px;
@@ -119,16 +119,16 @@ body {
 /* Reviews */
 .review-list{display:flex;flex-direction:column;gap:12px;margin-top:12px;}
 .review{
-  background:rgba(255,255,255,0.02);
+  background:rgba(255,255,255,0.03);
   border-radius:10px;
   padding:12px;
 }
 .review .head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
-.avatar{width:40px;height:40px;border-radius:50%;background:#222 center/cover no-repeat;}
+.avatar{width:40px;height:40px;border-radius:50%;background:#1d3b73 center/cover no-repeat;}
 .rname{font-weight:600;}
 .rstars{color:#f4c150;margin-left:auto;}
 .rtext{margin-top:6px;font-size:14px;color:#dfe9f8;}
-.dev-reply{margin-top:8px;background:rgba(255,255,255,0.04);padding:8px;border-radius:8px;font-size:13px;color:var(--muted);}
+.dev-reply{margin-top:8px;background:rgba(255,255,255,0.06);padding:8px;border-radius:8px;font-size:13px;color:var(--muted);}
 
 /* WhatsApp Floating Button */
 .whatsapp-btn {
@@ -157,7 +157,7 @@ body {
   font-size:13px;
   padding:30px 0 20px;
   margin-top:40px;
-  border-top:1px solid rgba(255,255,255,0.05);
+  border-top:1px solid rgba(255,255,255,0.08);
 }
 
 /* RESPONSIVE DESIGN */
@@ -300,4 +300,4 @@ body {
 </a>
 
 </body>
-</html>
+  </html>
